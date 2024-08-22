@@ -23,17 +23,17 @@ get_container_name() {
 
 get_steam_sync_path() {
     local container_id=$1
-    echo "${CLIENTS_DIR}/${container_id}/upper"
+    echo "${CLIENTS_DIR}/${container_id}/upper"  # Expected path: /wolf/clients/temp/<container_id>/upper
 }
 
 sync_steam_data() {
     local container_id=$1
-    local sync_path=$2
+    local sync_path=$2  # Expected path: /wolf/clients/temp/<container_id>/upper
     local container_name=$(get_container_name "$container_id")
     log "Starting sync process for closed container: $container_name (ID: $container_id)"
     
-    local library_steamapps_dir="${LIBRARY_DIR}/steamapps"
-    local library_common_dir="${library_steamapps_dir}/common"
+    local library_steamapps_dir="${LIBRARY_DIR}/steamapps"  # Expected path: /wolf/library/steamapps
+    local library_common_dir="${library_steamapps_dir}/common"  # Expected path: /wolf/library/steamapps/common
     
     # Ensure source and destination directories exist
     if [ ! -d "$sync_path" ]; then
