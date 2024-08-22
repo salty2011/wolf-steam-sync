@@ -50,7 +50,7 @@ sync_steam_data() {
     mkdir -p "$library_common_dir"
     
     # Sync common folder
-    local source_common_dir="${sync_path}/steamapps/common"  # Expected path: /wolf/clients/temp/<container_id>/upper/steamapps/common
+    local source_common_dir="${sync_path}/common"  # Expected path: /wolf/clients/temp/<container_id>/upper/common
     if [ -d "$source_common_dir" ]; then
         log "Syncing common directory for container $container_name (ID: $container_id)"
         rsync -av --ignore-errors --update "$source_common_dir/" "$library_common_dir/"
@@ -60,7 +60,7 @@ sync_steam_data() {
     
     # Sync ACF files
     log "Syncing ACF files for container $container_name (ID: $container_id)"
-    find "$sync_path/steamapps" -maxdepth 1 -name "*.acf" -exec rsync -av --ignore-errors --update {} "$library_steamapps_dir/" \;
+    find "$sync_path" -maxdepth 1 -name "*.acf" -exec rsync -av --ignore-errors --update {} "$library_steamapps_dir/" \;
     
     local sync_status=$?
     if [ $sync_status -eq 0 ]; then
