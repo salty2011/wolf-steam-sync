@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Configuration
-WOLF_ROOT="/wolf"
-CLIENTS_DIR="${WOLF_ROOT}/clients/temp"
-LIBRARY_DIR="${WOLF_ROOT}/library"
+WOLF_ROOT="/wolf"  # Base directory for Wolf
+CLIENTS_DIR="${WOLF_ROOT}/clients/temp"  # Expected path: /wolf/clients/temp
+LIBRARY_DIR="${WOLF_ROOT}/library"  # Expected path: /wolf/library
 
 # Use environment variables or default to the IDs we set in the Dockerfile
 PUID=${PUID:-99}
@@ -50,7 +50,7 @@ sync_steam_data() {
     mkdir -p "$library_common_dir"
     
     # Sync common folder
-    local source_common_dir="${sync_path}/steamapps/common"
+    local source_common_dir="${sync_path}/steamapps/common"  # Expected path: /wolf/clients/temp/<container_id>/upper/steamapps/common
     if [ -d "$source_common_dir" ]; then
         log "Syncing common directory for container $container_name (ID: $container_id)"
         rsync -av --ignore-errors --update "$source_common_dir/" "$library_common_dir/"
@@ -78,7 +78,7 @@ sync_steam_data() {
     ls -R "$library_steamapps_dir"
     
     # Always attempt to remove the container folder
-    local container_folder="${CLIENTS_DIR}/${container_id}"
+    local container_folder="${CLIENTS_DIR}/${container_id}"  # Expected path: /wolf/clients/temp/<container_id>
     log "Removing container folder: $container_folder"
     rm -rf "${container_folder:?}" || log "Warning: Failed to remove container folder: $container_folder"
     
