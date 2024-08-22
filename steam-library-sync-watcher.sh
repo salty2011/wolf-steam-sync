@@ -33,6 +33,7 @@ sync_steam_data() {
     log "Starting sync process for closed container: $container_name (ID: $container_id)"
     
     local library_steamapps_dir="${LIBRARY_DIR}/steamapps"
+    local library_common_dir="${library_steamapps_dir}/common"
     
     # Ensure source and destination directories exist
     if [ ! -d "$sync_path" ]; then
@@ -45,35 +46,35 @@ sync_steam_data() {
         return 1
     fi
     
-    # Check if steamapps directory exists in the source
-    local source_steamapps_dir="${sync_path}/steamapps"
-    if [ ! -d "$source_steamapps_dir" ]; then
-        log "Warning: steamapps directory not found in source: $source_steamapps_dir"
-        log "Attempting to sync from parent directory: $sync_path"
-        source_steamapps_dir="$sync_path"
+    # Create library common directory if it doesn't exist
+    mkdir -p "$library_common_dir"
+    
+    # Sync common folder
+    local source_common_dir="${sync_path}/steamapps/common"
+    if [ -d "$source_common_dir" ]; then
+        log "Syncing common directory for container $container_name (ID: $container_id)"
+        rsync -av --ignore-errors --update "$source_common_dir/" "$library_common_dir/"
+    else
+        log "Warning: common directory not found in source: $source_common_dir"
     fi
     
-    # Sync steamapps directory (including ACF files and common directory)
-    log "Syncing steamapps directory for container $container_name (ID: $container_id)"
-    log "Source: $source_steamapps_dir"
-    log "Destination: $library_steamapps_dir"
-    
-    # Use rsync to update existing files and add new ones, but not delete anything
-    rsync -av --ignore-errors --update "$source_steamapps_dir/" "$library_steamapps_dir/"
+    # Sync ACF files
+    log "Syncing ACF files for container $container_name (ID: $container_id)"
+    find "$sync_path/steamapps" -maxdepth 1 -name "*.acf" -exec rsync -av --ignore-errors --update {} "$library_steamapps_dir/" \;
     
     local sync_status=$?
     if [ $sync_status -eq 0 ]; then
-        log "Successfully synced steamapps directory for container $container_name (ID: $container_id)"
+        log "Successfully synced Steam data for container $container_name (ID: $container_id)"
     elif [ $sync_status -eq 23 ]; then
         log "Partial success: Some files were not transferred for container $container_name (ID: $container_id)"
     else
-        log "Failed to sync steamapps directory for container $container_name (ID: $container_id)"
+        log "Failed to sync Steam data for container $container_name (ID: $container_id)"
     fi
     
     # List contents of source and destination for verification
-    log "Contents of source directory:"
-    ls -R "$source_steamapps_dir"
-    log "Contents of destination directory:"
+    log "Contents of source steamapps directory:"
+    ls -R "${sync_path}/steamapps"
+    log "Contents of library steamapps directory:"
     ls -R "$library_steamapps_dir"
     
     # Always attempt to remove the container folder
