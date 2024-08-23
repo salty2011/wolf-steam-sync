@@ -58,7 +58,7 @@ check_and_set_permissions() {
 
 # Make sure the writable overlay directories exist
 gow_log "[OverlayFS-Entrypoint] Ensuring writable overlay directories exist..."
-mkdir -p ${UPPER_DIR} ${WORK_DIR} ${TARGET_OVERLAY_DIR} || { gow_log "[OverlayFS-Entrypoint] Failed to create writable overlay directories"; exit 1; }
+mkdir -p /overlayfs/user/${HOSTNAME} ${UPPER_DIR} ${WORK_DIR} ${TARGET_OVERLAY_DIR} || { gow_log "[OverlayFS-Entrypoint] Failed to create writable overlay directories"; exit 1; }
 
 gow_log "[OverlayFS-Entrypoint] Overlay directories:"
 gow_log "[OverlayFS-Entrypoint] Lower ACF (read-only): $LOWER_DIR_ACF"
