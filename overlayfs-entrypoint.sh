@@ -76,7 +76,6 @@ gow_log "[OverlayFS-Entrypoint] Work: $WORK_DIR"
 # Check and set permissions of the writable directories
 check_and_set_permissions "$UPPER_DIR" || exit 1
 check_and_set_permissions "$WORK_DIR" || exit 1
-check_and_set_permissions "/home/retro" || exit 1
 
 gow_log "[OverlayFS-Entrypoint] Creating overlay mount..."
 
