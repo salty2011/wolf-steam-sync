@@ -85,9 +85,15 @@ gow_log "[OverlayFS-Entrypoint] Overlay mount successful."
 gow_log "[OverlayFS-Entrypoint] Creating symlinks..."
 
 # Ensure the target directories exist
-mkdir -p "/home/retro/.steam/debian-installation/steamapps/common" || { gow_log "[OverlayFS-Entrypoint] Failed to create steamapps/common directory"; exit 1; }
 mkdir -p "/home/retro/.steam/debian-installation/steamapps" || { gow_log "[OverlayFS-Entrypoint] Failed to create steamapps directory"; exit 1; }
 
+# Remove existing common directory if it exists
+if [ -d "/home/retro/.steam/debian-installation/steamapps/common" ]; then
+    gow_log "[OverlayFS-Entrypoint] Removing existing common directory..."
+    rm -rf "/home/retro/.steam/debian-installation/steamapps/common" || { gow_log "[OverlayFS-Entrypoint] Failed to remove existing common directory"; exit 1; }
+fi
+
+# Create symlinks
 ln -sf "${TARGET_OVERLAY_DIR}/common" "/home/retro/.steam/debian-installation/steamapps/" || { gow_log "[OverlayFS-Entrypoint] Failed to create common symlink"; exit 1; }
 ln -sf "${TARGET_OVERLAY_DIR}"/*.acf "/home/retro/.steam/debian-installation/steamapps/" || { gow_log "[OverlayFS-Entrypoint] Failed to create ACF symlinks"; exit 1; }
 
