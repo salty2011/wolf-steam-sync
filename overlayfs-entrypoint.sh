@@ -3,11 +3,12 @@
 set -e  # Exit immediately if a command exits with a non-zero status
 
 ## VARIABLES ##
-TARGET_OVERLAY_DIR=${TARGET_OVERLAY_DIR:-"/home/retro/.steam/debian-installation/steamapps"}
+HOSTNAME=$(hostname)
+TARGET_OVERLAY_DIR="/overlayfs/user/${HOSTNAME}/mounted"
 LOWER_DIR_ACF=${LOWER_DIR_ACF:-"/overlayfs/library/acf"}
 LOWER_DIR_STEAMAPPS=${LOWER_DIR_STEAMAPPS:-"/overlayfs/library/steamapps"}
-UPPER_DIR=${UPPER_DIR:-"/overlayfs/user/Steam-Test"}
-WORK_DIR=${WORK_DIR:-"/overlayfs/user/work"}
+UPPER_DIR="/overlayfs/user/${HOSTNAME}/upper"
+WORK_DIR="/overlayfs/user/${HOSTNAME}/work"
 ###############
 
 # Include the gow bash utils library for logging
@@ -75,6 +76,14 @@ gow_log "[OverlayFS-Entrypoint] Creating overlay mount..."
 mount -t overlay overlay -o lowerdir=$LOWER_DIR_ACF:$LOWER_DIR_STEAMAPPS,upperdir=$UPPER_DIR,workdir=$WORK_DIR $TARGET_OVERLAY_DIR || { gow_log "[OverlayFS-Entrypoint] Failed to mount overlay"; exit 1; }
 
 gow_log "[OverlayFS-Entrypoint] Overlay mount successful."
+
+# Create symlinks
+gow_log "[OverlayFS-Entrypoint] Creating symlinks..."
+mkdir -p /home/root/.steam/debian-installation/steamapps
+ln -sf "${TARGET_OVERLAY_DIR}/common" "/home/root/.steam/debian-installation/steamapps/common" || { gow_log "[OverlayFS-Entrypoint] Failed to create common symlink"; exit 1; }
+ln -sf "${TARGET_OVERLAY_DIR}"/*.acf "/home/root/.steam/debian-installation/steamapps/" || { gow_log "[OverlayFS-Entrypoint] Failed to create ACF symlinks"; exit 1; }
+
+gow_log "[OverlayFS-Entrypoint] Symlinks created successfully."
 
 # Launch the base image's entrypoint.sh which will handle starting steam
 gow_log "[OverlayFS-Entrypoint] Launching base entrypoint.sh"
