@@ -60,6 +60,10 @@ check_and_set_permissions() {
 gow_log "[OverlayFS-Entrypoint] Ensuring writable overlay directories exist..."
 mkdir -p /overlayfs/user/${HOSTNAME} ${UPPER_DIR} ${WORK_DIR} ${TARGET_OVERLAY_DIR} || { gow_log "[OverlayFS-Entrypoint] Failed to create writable overlay directories"; exit 1; }
 
+# Ensure the target mount directory exists
+gow_log "[OverlayFS-Entrypoint] Ensuring target mount directory exists..."
+mkdir -p ${TARGET_OVERLAY_DIR} || { gow_log "[OverlayFS-Entrypoint] Failed to create target mount directory"; exit 1; }
+
 gow_log "[OverlayFS-Entrypoint] Overlay directories:"
 gow_log "[OverlayFS-Entrypoint] Lower ACF (read-only): $LOWER_DIR_ACF"
 gow_log "[OverlayFS-Entrypoint] Lower Steamapps (read-only): $LOWER_DIR_STEAMAPPS"
