@@ -88,7 +88,7 @@ gow_log "[OverlayFS-Entrypoint] Creating symlinks..."
 mkdir -p "/home/retro/.steam/debian-installation/steamapps/common" || { gow_log "[OverlayFS-Entrypoint] Failed to create steamapps/common directory"; exit 1; }
 mkdir -p "/home/retro/.steam/debian-installation/steamapps" || { gow_log "[OverlayFS-Entrypoint] Failed to create steamapps directory"; exit 1; }
 
-ln -sf "${TARGET_OVERLAY_DIR}/common" "/home/retro/.steam/debian-installation/steamapps/common" || { gow_log "[OverlayFS-Entrypoint] Failed to create common symlink"; exit 1; }
+ln -sf "${TARGET_OVERLAY_DIR}/common" "/home/retro/.steam/debian-installation/steamapps/" || { gow_log "[OverlayFS-Entrypoint] Failed to create common symlink"; exit 1; }
 ln -sf "${TARGET_OVERLAY_DIR}"/*.acf "/home/retro/.steam/debian-installation/steamapps/" || { gow_log "[OverlayFS-Entrypoint] Failed to create ACF symlinks"; exit 1; }
 
 gow_log "[OverlayFS-Entrypoint] Symlinks created successfully."
