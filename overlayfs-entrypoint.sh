@@ -63,19 +63,17 @@ check_and_set_permissions() {
     return 0
 }
 
-# Make sure the overlayfs directories exist
-gow_log "[OverlayFS-Entrypoint] Ensuring overlay directories exist..."
-mkdir -p ${LOWER_DIR_ACF} ${LOWER_DIR_STEAMAPPS} ${UPPER_DIR} ${WORK_DIR} ${TARGET_OVERLAY_DIR} || { gow_log "[OverlayFS-Entrypoint] Failed to create overlay directories"; exit 1; }
+# Make sure the writable overlay directories exist
+gow_log "[OverlayFS-Entrypoint] Ensuring writable overlay directories exist..."
+mkdir -p ${UPPER_DIR} ${WORK_DIR} ${TARGET_OVERLAY_DIR} || { gow_log "[OverlayFS-Entrypoint] Failed to create writable overlay directories"; exit 1; }
 
-gow_log "[OverlayFS-Entrypoint] Created overlay directories:"
-gow_log "[OverlayFS-Entrypoint] Lower ACF: $LOWER_DIR_ACF"
-gow_log "[OverlayFS-Entrypoint] Lower Steamapps: $LOWER_DIR_STEAMAPPS"
+gow_log "[OverlayFS-Entrypoint] Overlay directories:"
+gow_log "[OverlayFS-Entrypoint] Lower ACF (read-only): $LOWER_DIR_ACF"
+gow_log "[OverlayFS-Entrypoint] Lower Steamapps (read-only): $LOWER_DIR_STEAMAPPS"
 gow_log "[OverlayFS-Entrypoint] Upper: $UPPER_DIR"
 gow_log "[OverlayFS-Entrypoint] Work: $WORK_DIR"
 
-# Check and set permissions of the directories
-check_and_set_permissions "$LOWER_DIR_ACF" || exit 1
-check_and_set_permissions "$LOWER_DIR_STEAMAPPS" || exit 1
+# Check and set permissions of the writable directories
 check_and_set_permissions "$UPPER_DIR" || exit 1
 check_and_set_permissions "$WORK_DIR" || exit 1
 check_and_set_permissions "/home/retro" || exit 1
