@@ -20,14 +20,6 @@ PGID="${PGID:-1000}"
 gow_log "[OverlayFS-Entrypoint] Starting container setup..."
 gow_log "[OverlayFS-Entrypoint] Permission UID:GID is ${PUID}:${PGID}"
 
-# Function to handle cleanup
-cleanup() {
-    gow_log "[OverlayFS-Entrypoint] Container is shutting down..."
-    # Any other cleanup tasks can go here
-}
-
-# Set trap for cleanup
-trap cleanup EXIT
 
 # Function to check and set permissions if needed
 check_and_set_permissions() {
